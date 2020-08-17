@@ -32,20 +32,23 @@ def add_summary(df, filter_data_row_number):
     df_nan_count
     return(df_filtered)
 
-def add_widget():
+def add_widget(df):
     add_filter_data_row_number = st.sidebar.number_input(
-        'Select a max number of show data num',
+        'Select number of using data.',
         0, 10000, 10000,
         key = "1"
     )
-    return add_filter_data_row_number
+    add_scatter_columns = st.sidebar.multiselect(
+    "Choose columns.", list(df.columns), list(df.columns)
+    )
+    return add_filter_data_row_number, add_scatter_columns
 
 def add_bar_histogram(df, columns, bin):
     num_columns = len(columns)
     plot_cols = math.ceil(num_columns / 4)
     base = alt.Chart().mark_bar().encode().properties(
-        width = 600 / plot_cols,
-        height = 600 / plot_cols
+        width = 450 / plot_cols,
+        height = 450 / plot_cols
     ).interactive()
     plot = alt.vconcat(data = df)
     i = 0
@@ -64,15 +67,16 @@ def add_bar_histogram(df, columns, bin):
     return(plot)
 
 def add_scatter_plot(df, columns):
-    scatter_columns = st.multiselect(
-    "Choose columns", list(columns), [columns[0], columns[1]]
-    )
-    if len(scatter_columns) != 2:
-        st.error("Please select two columns.")
-        return
     plot = alt.Chart(df).mark_circle().encode(
-        x = scatter_columns[0], y = scatter_columns[1]
-        ).interactive()
+        alt.X(alt.repeat("column"), type = 'quantitative'),
+        alt.Y(alt.repeat("row"), type = 'quantitative')
+    ).properties(
+        width = 600 / len(columns),
+        height = 600 / len(columns)
+    ).repeat(
+        column = list(columns),
+        row = list(columns)
+    )
     return(plot)
 
 def add_plot(df):
@@ -99,7 +103,8 @@ def add_plot(df):
 def create_dashboard():
     path = sys.argv[1]
     df = read_data(path)
-    filter_data_row_number = add_widget()
+    filter_data_row_number, selected_columns = add_widget(df)
+    df = df[selected_columns]
 
     """
     # Table Data Dashboard    
