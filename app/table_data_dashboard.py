@@ -117,8 +117,6 @@ def create_dashboard():
 
     """
     ## Plot
-
-    Plot uses only filtered data. 
     """
     add_plot(df_filtered)
 
