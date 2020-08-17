@@ -24,8 +24,8 @@ def add_summary(df, filter_data_row_number):
     df_types
 
     '### Statistics:'
-    print_data_describe  = df.describe()
-    print_data_describe
+    df_describe  = df.describe()
+    df_describe
 
     '### Nan count:'
     df_nan_count = df.isnull().sum()
@@ -33,15 +33,15 @@ def add_summary(df, filter_data_row_number):
     return(df_filtered)
 
 def add_widget(df):
-    add_filter_data_row_number = st.sidebar.number_input(
+    numberof_using_data = st.sidebar.number_input(
         'Select number of using data.',
         0, 10000, 10000,
         key = "1"
     )
-    add_scatter_columns = st.sidebar.multiselect(
+    selected_columns = st.sidebar.multiselect(
     "Choose columns.", list(df.columns), list(df.columns)
     )
-    return add_filter_data_row_number, add_scatter_columns
+    return numberof_using_data, selected_columns
 
 def add_bar_histogram(df, columns, bin):
     num_columns = len(columns)
@@ -103,7 +103,7 @@ def add_plot(df):
 def create_dashboard():
     path = sys.argv[1]
     df = read_data(path)
-    filter_data_row_number, selected_columns = add_widget(df)
+    numberof_using_data, selected_columns = add_widget(df)
     df = df[selected_columns]
 
     """
@@ -113,7 +113,7 @@ def create_dashboard():
     """
     ## Summary
     """
-    df_filtered = add_summary(df, filter_data_row_number)
+    df_filtered = add_summary(df, numberof_using_data)
 
     """
     ## Plot
