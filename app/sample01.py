@@ -18,13 +18,12 @@ def add_widget():
     )
     return add_filter_data_row_number
 
-
 def add_bar_histogram(df, columns, bin):
     num_columns = len(columns)
-    plot_cols = math.ceil(num_columns / 10)
+    plot_cols = math.ceil(num_columns / 4)
     base = alt.Chart().mark_bar().encode().properties(
-        width = 300 / plot_cols,
-        height = 300 / plot_cols
+        width = 600 / plot_cols,
+        height = 600 / plot_cols
     ).interactive()
     plot = alt.vconcat(data = df)
     i = 0
