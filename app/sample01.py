@@ -10,6 +10,28 @@ def read_data(path):
     df = pd.read_csv(path)
     return df
 
+def add_summary(df, filter_data_row_number):
+    df_shape = df.shape
+    '### Data shape:'
+    'row:', df_shape[0], 'col:', df_shape[1]
+
+    '### Data table:'
+    df_filtered = df.head(filter_data_row_number)
+    df_filtered
+
+    '### Data type:'
+    df_types = df.dtypes
+    df_types
+
+    '### Statistics:'
+    print_data_describe  = df.describe()
+    print_data_describe
+
+    '### Nan count:'
+    df_nan_count = df.isnull().sum()
+    df_nan_count
+    return(df_filtered, df_types)
+
 def add_widget():
     add_filter_data_row_number = st.sidebar.number_input(
         'Select a max number of show data num',
@@ -53,63 +75,46 @@ def add_scatter_plot(df, columns):
         ).interactive()
     return(plot)
 
-def main():
+def add_plot(df, df_types):
+    columns = df.columns
+    int_float_columns = columns[(df_types == "int64") | (df_types == "float64")]
+    category_columns = columns[~((df_types == "int64") | (df_types == "float64"))]
+    # histogram
+    if len(int_float_columns) > 0:
+        '### Histogram:'
+        h = add_bar_histogram(df, int_float_columns, bin = True)
+        h
+    # bar
+    if len(category_columns) > 0:
+        '### Bar plot:'
+        b = add_bar_histogram(df, category_columns, bin = False)
+        b
+    # scatter plot
+    if len(int_float_columns) > 2:
+        '### Scatter plot:'
+        p = add_scatter_plot(df, int_float_columns)
+        p
+
+def create_dashboard():
     path = sys.argv[1]
     df = read_data(path)
     filter_data_row_number = add_widget()
 
     """
-    # Sample 1: Check data app
-    
-    ## Summary
+    # Sample 1: Check data app    
     """
 
-    '### Data shape:'
-    df_shape = df.shape
-    'row:', df_shape[0]
-    'col:', df_shape[1]
-
-    '### Data table:'
-    df_filtered = df.head(filter_data_row_number)
-    df_filtered
-
-    '### Data type:'
-    df_types = df.dtypes
-    df_types
-
-    '### Statistics:'
-    print_data_describe  = df.describe()
-    print_data_describe
-
-    '### Nan count:'
-    df_nan_count = df.isnull().sum()
-    df_nan_count
+    """
+    ## Summary
+    """
+    df_filtered, df_types = add_summary(df, filter_data_row_number)
 
     """
     ## Plot
 
     Plot uses only filtered data. 
     """
-    columns = df.columns
-    int_float_columns = columns[(df_types == "int64") | (df_types == "float64")]
-    category_columns = columns[~((df_types == "int64") | (df_types == "float64"))]
+    add_plot(df_filtered, df_types)
 
-    # histogram
-    if len(int_float_columns) > 0:
-        '### Histogram:'
-        h = add_bar_histogram(df_filtered, int_float_columns, bin = True)
-        h
-
-    # bar
-    if len(category_columns) > 0:
-        '### Bar plot:'
-        b = add_bar_histogram(df_filtered, category_columns, bin = False)
-        b
-
-    # scatter plot
-    if len(int_float_columns) > 2:
-        '### Scatter plot:'
-        p = add_scatter_plot(df_filtered, int_float_columns)
-        p
-
-main()
+if __name__ == "__main__":
+    create_dashboard()
