@@ -30,7 +30,7 @@ def add_summary(df, filter_data_row_number):
     '### Nan count:'
     df_nan_count = df.isnull().sum()
     df_nan_count
-    return(df_filtered, df_types)
+    return(df_filtered)
 
 def add_widget():
     add_filter_data_row_number = st.sidebar.number_input(
@@ -75,7 +75,8 @@ def add_scatter_plot(df, columns):
         ).interactive()
     return(plot)
 
-def add_plot(df, df_types):
+def add_plot(df):
+    df_types = df.dtypes
     columns = df.columns
     int_float_columns = columns[(df_types == "int64") | (df_types == "float64")]
     category_columns = columns[~((df_types == "int64") | (df_types == "float64"))]
@@ -107,14 +108,14 @@ def create_dashboard():
     """
     ## Summary
     """
-    df_filtered, df_types = add_summary(df, filter_data_row_number)
+    df_filtered = add_summary(df, filter_data_row_number)
 
     """
     ## Plot
 
     Plot uses only filtered data. 
     """
-    add_plot(df_filtered, df_types)
+    add_plot(df_filtered)
 
 if __name__ == "__main__":
     create_dashboard()
