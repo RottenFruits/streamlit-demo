@@ -10,14 +10,25 @@ def read_data(path):
     df = pd.read_csv(path)
     return df
 
-def add_summary(df, filter_data_row_number):
+def add_widget(df):
+    numberof_using_data = st.sidebar.number_input(
+        'Select number of using data in plot.',
+        0, 10000, 10000,
+        key = "1"
+    )
+    selected_columns = st.sidebar.multiselect(
+    "Choose columns.", list(df.columns), list(df.columns)
+    )
+    return numberof_using_data, selected_columns
+
+def add_summary(df):
     df_shape = df.shape
     '### Data shape:'
     'row:', df_shape[0], 'col:', df_shape[1]
 
     '### Data table:'
-    df_filtered = df.head(filter_data_row_number)
-    df_filtered
+    df_head = df.head(10)
+    df_head
 
     '### Data type:'
     df_types = df.dtypes
@@ -30,18 +41,6 @@ def add_summary(df, filter_data_row_number):
     '### Nan count:'
     df_nan_count = df.isnull().sum()
     df_nan_count
-    return(df_filtered)
-
-def add_widget(df):
-    numberof_using_data = st.sidebar.number_input(
-        'Select number of using data.',
-        0, 10000, 10000,
-        key = "1"
-    )
-    selected_columns = st.sidebar.multiselect(
-    "Choose columns.", list(df.columns), list(df.columns)
-    )
-    return numberof_using_data, selected_columns
 
 def add_bar_histogram(df, columns, bin):
     num_columns = len(columns)
@@ -104,7 +103,8 @@ def create_dashboard():
     path = sys.argv[1]
     df = read_data(path)
     numberof_using_data, selected_columns = add_widget(df)
-    df = df[selected_columns]
+    df_plot = df.iloc[:numberof_using_data, :]
+    df_plot = df_plot[selected_columns]
 
     """
     # Table Data Dashboard    
@@ -113,12 +113,12 @@ def create_dashboard():
     """
     ## Summary
     """
-    df_filtered = add_summary(df, numberof_using_data)
+    add_summary(df)
 
     """
     ## Plot
     """
-    add_plot(df_filtered)
+    add_plot(df_plot)
 
 if __name__ == "__main__":
     create_dashboard()
