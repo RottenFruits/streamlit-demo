@@ -12,3 +12,9 @@
 
 ### Table data dashboard
 - `streamlit run table_data_dashboard.py <data_path>`
+
+### Timeseries data dashboard
+- `streamlit run timeseries_data_dashboard.py <data_path>`
+
+### Model tuning
+- `streamlit run model_tuning.py <data_and_model_path>`
