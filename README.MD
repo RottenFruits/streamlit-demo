@@ -10,4 +10,5 @@
 
 ### app start
 
-- `streamlit run ***.py`
+### Table data dashboard
+- `streamlit run table_data_dashboard.py <data_path>`

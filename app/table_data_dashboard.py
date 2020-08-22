@@ -27,7 +27,11 @@ def add_summary(df):
     'row:', df_shape[0], 'col:', df_shape[1]
 
     '### Data table:'
-    df_head = df.head(10)
+    ind = st.text_input('Select index', '')
+    if ind == '':
+        df_head = df.head(10)
+    else:
+        df_head = df.iloc[int(ind), :]
     df_head
 
     '### Data type:'
