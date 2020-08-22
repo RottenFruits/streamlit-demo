@@ -13,6 +13,8 @@
 ### Table data dashboard
 - `streamlit run table_data_dashboard.py <data_path>`
 
+![](https://raw.githubusercontent.com/RottenFruits/streamlit-demo/master/png/ss-2020-08-22%209.29.13.png)
+
 ### Timeseries data dashboard
 - `streamlit run timeseries_data_dashboard.py <data_path>`
 
