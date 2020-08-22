@@ -28,8 +28,12 @@ def add_summary(df):
 
     '### Data table:'
     ind = st.text_input('Select index', '')
+    show_datas_of_a_page = st.number_input('show data of a page', 10)
+    page = st.slider('page', 1, math.ceil(df_shape[0] / show_datas_of_a_page), 1, 1)
     if ind == '':
-        df_head = df.head(10)
+        start = (page - 1) * show_datas_of_a_page
+        end = start + show_datas_of_a_page
+        df_head = df.iloc[start:end, :].head(show_datas_of_a_page)
     else:
         df_head = df.iloc[int(ind), :]
     df_head
